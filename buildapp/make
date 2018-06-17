@@ -1,0 +1,16 @@
+#!/bin/sh
+
+pythonpath=$(which python3)
+root_directory=$(pwd)
+echo $root_directory
+
+requirement_file='/requirements.txt'
+data_build_dir='/buildapp'
+echo $(pwd)
+# pip install --user pipenv
+
+echo 'Installing requirements..................................................'
+echo '\n'
+echo '\n'
+pip install -r $root_directory$requirement_file
+

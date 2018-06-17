@@ -1,0 +1,9 @@
+#!/bin/sh
+
+project_manage_file='/url_shortner/manage.py'
+db_file='/db.sqlite3'
+
+cd ..
+
+root_directory=$(pwd)
+$(which python) $root_directory$project_manage_file test
