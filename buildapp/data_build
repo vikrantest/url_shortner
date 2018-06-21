@@ -1,0 +1,30 @@
+#!/bin/sh
+
+
+data_build_file='/buildapp/data_build.py'
+project_manage_file='/manage.py'
+db_file='/db.sqlite3'
+
+cd ..
+root_directory=$(pwd)
+
+if [[ $1 == '--setupdb' ]]; then
+	echo '\n'
+	echo 'Setting up fresh db after flushing old one if it exists.......................................'
+	echo '\n'
+	> $root_directory$db_file
+	$(which python) $root_directory$project_manage_file makemigrations
+	$(which python) $root_directory$project_manage_file migrate
+	echo 'Setting up test data into database..............................'
+	$(which python) $root_directory$data_build_file
+elif [[ $1 == '--syncdb' ]]; then
+	echo '\n'
+	echo 'Syncing db for schema and new table changes.........................................'
+	echo '\n'
+	$(which python) $root_directory$project_manage_file makemigrations
+	$(which python) $root_directory$project_manage_file migrate
+elif [ $1 != '--syncdb' -a $1 != '--setupdb' ]; then
+	echo '\n'
+	echo 'Invalid param - use --setupdb for seting up new db with prepopulated sample data or use --syncdb to sync your db changes'
+	echo '\n'
+fi

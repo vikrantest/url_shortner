@@ -40,7 +40,7 @@ class DatetimeUtil:
 		start_time = unixtime - ((datetime_obj.hour*60*60)+(datetime_obj.minute*60)+datetime_obj.second)
 		end_time = start_time + (24*60*60)-1
 		return start_time,end_time
-		
+
 
 class UniqueElemUtil:
 
@@ -52,5 +52,5 @@ class UniqueElemUtil:
 		p2 = str(base_id)
 		p3 = str(param)[5:]
 
-		return p0+p1+p2+p3
+		return p0+p2+p3
 
