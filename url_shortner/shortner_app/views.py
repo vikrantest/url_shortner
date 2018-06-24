@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from shortner_utils.validators import URLValidator
-from shortner_app.shortnerservice import urlShortnerService
+from shortner_app.shortnerservice import urlShortnerDBService
 
 class ShortnerAPI(APIView):
 	"""
@@ -21,16 +21,16 @@ class ShortnerAPI(APIView):
 		request_data = request.data
 		request_shurl = request_data['shurl_url']
 		validated_data = self.requestValidate(request_shurl)
-		shortner_service = urlShortnerService()
 
 		if validated_data:
-			print(validated_data)
-			shortner_service = urlShortnerService()
-			response = shortner_service(validated_data)
+			shortner_service = urlShortnerDBService()
+			response , exists = shortner_service(validated_data)
+			if not exists:
+				return Response({'shurl_slug':response},status=status.HTTP_201_CREATED)
+			else:
+				return Response({'shurl_slug':response},status=status.HTTP_200_OK)
 		else:
 			return Response({'error':'Invalid Url'},status=status.HTTP_400_BAD_REQUEST)
 
-		return Response({'response':'asfasdfa'},status=status.HTTP_201_CREATED)
-
 	def get(self,request):
-		return Response({'response':'asfasdfa'},status=status.HTTP_200_OK)
+		return Response({'response':'response'},status=status.HTTP_200_OK)

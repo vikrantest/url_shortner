@@ -3,6 +3,9 @@ import datetime
 import os
 import uuid
 import re
+import math
+import string
+from django.conf import settings as my_settings
 
 
 class DatetimeUtil:
@@ -47,10 +50,43 @@ class UniqueElemUtil:
 	@staticmethod
 	def uniid_key(base_id):
 		param = DatetimeUtil.unixtime()
+		print(len(str(param)))
 		p0 = str(param)[:4]
 		p1 = ''.join(list(filter(str.isdigit,re.findall('..', '%012x' % uuid.getnode()))))
 		p2 = str(base_id)
-		p3 = str(param)[5:]
+		p3 = str(param)[4:8]
 
 		return p0+p2+p3
 
+
+class UrlSlugGenerator:
+
+	mapper = string.ascii_lowercase+string.digits+string.ascii_uppercase
+	base_val = my_settings.BASE_CONVERSION_VAL
+
+	@classmethod
+	def baseencoder(cls,key):
+
+		slug = ''
+
+		while key:
+			slug = slug+cls.mapper[key%cls.base_val]
+			key = math.floor(key/cls.base_val)
+		return slug
+
+
+
+	@classmethod
+	def basedecoder(cls,slug):
+		key = 0
+		lent = len(slug)
+		for m in range(lent):
+			key = res * cls.base_val + cls.mapper.find(slug[m])
+		return key
+		
+
+	@classmethod
+	def generateSlug(cls,key):
+		return cls.baseencoder(key)
+
+	

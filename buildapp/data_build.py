@@ -41,3 +41,4 @@ class ProjectTestDataSet:
 if __name__ == '__main__':
 	ProjectTestDataSet().setup()
 
+db.seqcounter.insert({_id:"seqid",sequence_val:100})

@@ -116,6 +116,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+BASE_CONVERSION_VAL = 62
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
