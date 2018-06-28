@@ -34,3 +34,17 @@ class ShortnerAPI(APIView):
 
 	def get(self,request):
 		return Response({'response':'response'},status=status.HTTP_200_OK)
+
+
+
+class ShortUrlConsumer(APIView):
+	"""
+	Short url consumer for redirection
+	"""
+
+	def get(self,request,shurl_slug):
+		print(shurl_slug)
+		shurl_slug = shurl_slug.strip()
+		shortner_service = urlShortnerDBService()
+		shortner_service(shurl_slug)
+		return Response({'response':'success'})

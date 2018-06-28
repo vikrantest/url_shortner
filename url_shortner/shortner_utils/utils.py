@@ -59,7 +59,7 @@ class UniqueElemUtil:
 		return p0+p2+p3
 
 
-class UrlSlugGenerator:
+class UrlSlugService:
 
 	mapper = string.ascii_lowercase+string.digits+string.ascii_uppercase
 	base_val = my_settings.BASE_CONVERSION_VAL
@@ -80,8 +80,11 @@ class UrlSlugGenerator:
 	def basedecoder(cls,slug):
 		key = 0
 		lent = len(slug)
+		res = 0
+		print(cls.mapper)
 		for m in range(lent):
-			key = res * cls.base_val + cls.mapper.find(slug[m])
+			print(cls.mapper.find(slug[m]))
+			key = key * cls.base_val + cls.mapper.find(slug[m])
 		return key
 		
 

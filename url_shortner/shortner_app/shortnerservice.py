@@ -1,7 +1,7 @@
 import copy
-from dbapp.dbconns import DbConnection
 from django.conf import settings as my_settings
-from shortner_utils.utils import UniqueElemUtil , UrlSlugGenerator
+from dbapp.dbops import DbOperations
+from shortner_utils.utils import UniqueElemUtil , UrlSlugService
 
 
 class urlShortnerDBService:
@@ -9,41 +9,46 @@ class urlShortnerDBService:
 	def __call__(self,data):
 		db_name = my_settings.MONGODB_DB_NAME
 		if isinstance(data,dict):
-			return self.main_service(data,db_name)
-
-	def get_connection(self,db_name):
-		dbconn = DbConnection()
-		return dbconn(my_settings.STORAGE_TYPE)[db_name]
+			return self.generatorService(data,db_name)
+		if isinstance(data,str):
+			return self.urlGetterService(data,db_name)
 
 	def exit(self,conn_obj):
 		conn_obj.close()
 		return True
 
-	def main_service(self,data,db_name,exist = False):
-		db_connection = self.get_connection(db_name)
-		coll_obj = db_connection['shurlman']
+	def getCollectionConn(self,action):
+		return DbOperations.getConnection(operation=action)
 
-		shurl_data = self.get_obj(data,coll_obj)
+	def urlGetterService(self,data,db_name):
+		db_connection = self.getCollectionConn('get_redirect_main_url')
+		UrlSlugOperationService.getSlugUrl(data)
+
+	def generatorService(self,data,db_name,exist = False):
+		db_connection = self.getCollectionConn('generate_url')
+		print(db_connection,type(db_connection),'++++++++++++++++123123')
+
+		shurl_data = self.getObj(data,db_connection)
 
 		if shurl_data:
 			exist = True
-			print(shurl_data)
 		else:
 			shurl_data = copy.deepcopy(data)
-			shurl_data['seq_id'] = self.get_nextseq_num('seqid',db_connection['seqcounter'])
+			shurl_data['seq_id'] = self.getNextseqNum('seqid',self.getCollectionConn('sequence_coll'))
 			shurl_data['key_id'] = UniqueElemUtil.uniid_key(int(shurl_data['seq_id']))
 
 		shurl_slug = self.getShurlSlug(int(shurl_data['key_id']))
 		if not exist:
-			self.set_obj(shurl_data,coll_obj)
+			self.setObj(shurl_data,db_connection)
 		return shurl_slug , exist
 
 
-	def get_obj(self,data,collection_conn):
+	def getObj(self,data,collection_conn):
+		print(collection_conn)
 		main_url = '{}{}'.format(data['prefix_data'],data['frag_url'])
 		return collection_conn.find_one({'main_url':main_url})
 
-	def get_nextseq_num(self,seq_name,collection_conn):
+	def getNextseqNum(self,seq_name,collection_conn):
 		next_seq_doc = collection_conn.find_one_and_update({
 			'_id': seq_name },
 			{'$inc': {'sequence_val': 1}},
@@ -52,7 +57,7 @@ class urlShortnerDBService:
 		return int(next_seq_doc['sequence_val'])
 
 
-	def set_obj(self,data,collection_conn):
+	def setObj(self,data,collection_conn):
 		if collection_conn:
 			data['expiry_time'] = 0
 			data['main_url'] = '{}{}'.format(data['prefix_data'],data['frag_url'])
@@ -60,14 +65,21 @@ class urlShortnerDBService:
 			return data
 
 	def getShurlSlug(self,key):
-		return UrlSlugGeneratorService.generateSlug(int(key))
+		return UrlSlugOperationService.generateSlug(int(key))
 
 
-class UrlSlugGeneratorService:
+
+class UrlSlugOperationService:
 
 	@staticmethod
 	def generateSlug(key):
-		shurl_slug = UrlSlugGenerator.generateSlug(key)
+		shurl_slug = UrlSlugService.generateSlug(key)
 		return shurl_slug
+
+	@staticmethod
+	def getSlugUrl(slug):
+		print(slug,'+++++++++++++++++++++++++++')
+		print(UrlSlugService.basedecoder(slug))
+
 
 
