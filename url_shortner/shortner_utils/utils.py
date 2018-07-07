@@ -66,11 +66,9 @@ class UrlSlugService:
 
 	@classmethod
 	def baseencoder(cls,key):
-
 		slug = ''
-
 		while key:
-			slug = slug+cls.mapper[key%cls.base_val]
+			slug = cls.mapper[key%cls.base_val]+slug
 			key = math.floor(key/cls.base_val)
 		return slug
 

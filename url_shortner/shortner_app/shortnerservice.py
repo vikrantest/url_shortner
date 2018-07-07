@@ -1,4 +1,5 @@
 import copy
+import re
 from django.conf import settings as my_settings
 from dbapp.dbops import DbOperations
 from shortner_utils.utils import UniqueElemUtil , UrlSlugService
@@ -22,11 +23,15 @@ class urlShortnerDBService:
 
 	def urlGetterService(self,data,db_name):
 		db_connection = self.getCollectionConn('get_redirect_main_url')
-		UrlSlugOperationService.getSlugUrl(data)
+		key = UrlSlugOperationService.getSlugUrl(data)
+		data = db_connection.find_one({'key_id':str(key)})
+		if re.match('http',data['main_url']):
+			return data['main_url']
+		else:
+			return 'http://'+data['main_url']
 
 	def generatorService(self,data,db_name,exist = False):
 		db_connection = self.getCollectionConn('generate_url')
-		print(db_connection,type(db_connection),'++++++++++++++++123123')
 
 		shurl_data = self.getObj(data,db_connection)
 
@@ -78,8 +83,7 @@ class UrlSlugOperationService:
 
 	@staticmethod
 	def getSlugUrl(slug):
-		print(slug,'+++++++++++++++++++++++++++')
-		print(UrlSlugService.basedecoder(slug))
+		return UrlSlugService.basedecoder(slug)
 
 
 

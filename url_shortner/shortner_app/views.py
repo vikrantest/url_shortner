@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -33,7 +34,7 @@ class ShortnerAPI(APIView):
 			return Response({'error':'Invalid Url'},status=status.HTTP_400_BAD_REQUEST)
 
 	def get(self,request):
-		return Response({'response':'response'},status=status.HTTP_200_OK)
+		return HttpResponseRedirect({'response':'response'},status=status.HTTP_200_OK)
 
 
 
@@ -46,5 +47,6 @@ class ShortUrlConsumer(APIView):
 		print(shurl_slug)
 		shurl_slug = shurl_slug.strip()
 		shortner_service = urlShortnerDBService()
-		shortner_service(shurl_slug)
-		return Response({'response':'success'})
+		redirect_url = shortner_service(shurl_slug)
+		print(redirect_url)
+		return HttpResponseRedirect(redirect_url)
