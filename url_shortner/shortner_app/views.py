@@ -12,7 +12,10 @@ class ShortnerAPI(APIView):
 	API for shortening URL
 	"""
 
-	def requestValidate(self,url):
+	def requestmandateValidation(self,request_data):
+		return URLValidator.mandatoryValidation(request_data)
+
+	def requestUrlValidate(self,url):
 		if not URLValidator.validateUrl(url):
 			return False
 		return URLValidator.getFragUrl(url)
@@ -20,10 +23,18 @@ class ShortnerAPI(APIView):
 
 	def post(self,request):
 		request_data = request.data
-		request_shurl = request_data['shurl_url']
-		validated_data = self.requestValidate(request_shurl)
+		print(request_data,'+++++++++++++')
+		request_shurl = request_data.get('shurl_url','')
+		if self.requestmandateValidation(request_data):
+			validated_data = self.requestUrlValidate(request_shurl)
+		else:
+			return Response({'error':'Invalid Request'},status=status.HTTP_400_BAD_REQUEST)
 
 		if validated_data:
+			if request_data.get('new_shurl') and request_data['new_shurl'] in ['true',True]:
+				validated_data['new_shurl'] = True
+			else:
+				validated_data['new_shurl'] = False
 			shortner_service = urlShortnerDBService()
 			response , exists = shortner_service(validated_data)
 			if not exists:

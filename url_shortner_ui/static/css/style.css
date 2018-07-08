@@ -70,6 +70,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d96b4da8', e
 	float: left;
 	width: 50%;
 }
+
+.shurl_content_error{
+	color: #840031;
+    display: inline-block;
+    float: left;
+    width: 100%;
+    text-transform: uppercase;
+}
+
+.input_box_error{
+	background-color: #fbdcdc;
+	border: 1.5px dotted red;
+}
 /* Media Queries 
 @media(min-width:768px) {
 .head-main {

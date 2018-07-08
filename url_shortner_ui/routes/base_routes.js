@@ -5,7 +5,7 @@ var router = express.Router();
 var shurl_controller = require('../controllers/base_controller');
 
 // router.post('/generate_shurl', shurl_controller.generate_shurl);
-router.get('/', shurl_controller.index_shurl);
+router.get('/', shurl_controller.indexShurl);
 
 module.exports = router;
 

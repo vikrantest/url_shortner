@@ -50,7 +50,6 @@ class UniqueElemUtil:
 	@staticmethod
 	def uniid_key(base_id):
 		param = DatetimeUtil.unixtime()
-		print(len(str(param)))
 		p0 = str(param)[:4]
 		p1 = ''.join(list(filter(str.isdigit,re.findall('..', '%012x' % uuid.getnode()))))
 		p2 = str(base_id)
@@ -79,9 +78,7 @@ class UrlSlugService:
 		key = 0
 		lent = len(slug)
 		res = 0
-		print(cls.mapper)
 		for m in range(lent):
-			print(cls.mapper.find(slug[m]))
 			key = key * cls.base_val + cls.mapper.find(slug[m])
 		return key
 		

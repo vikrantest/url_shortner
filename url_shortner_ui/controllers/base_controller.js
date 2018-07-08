@@ -5,6 +5,10 @@ var async = require('async');
 var path = require('path');
 
 
-exports.index_shurl = function(req,res){
+exports.indexShurl = function(req,res){
 	res.sendFile(path.resolve(__dirname+'/../static/templates/index.html'));
+}
+
+exports.generateshurl = function(req,res){
+	console.log('dfasdfadsfasdf');
 }

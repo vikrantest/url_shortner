@@ -33,9 +33,12 @@ class urlShortnerDBService:
 	def generatorService(self,data,db_name,exist = False):
 		db_connection = self.getCollectionConn('generate_url')
 
-		shurl_data = self.getObj(data,db_connection)
+		shurl_obj_list = self.getObj(data,db_connection)
 
-		if shurl_data:
+		print(shurl_obj_list.count())
+
+		shurl_data = shurl_obj_list[0] if shurl_obj_list.count()>0 else None
+		if shurl_data and not data['new_shurl']:
 			exist = True
 		else:
 			shurl_data = copy.deepcopy(data)
@@ -49,9 +52,8 @@ class urlShortnerDBService:
 
 
 	def getObj(self,data,collection_conn):
-		print(collection_conn)
 		main_url = '{}{}'.format(data['prefix_data'],data['frag_url'])
-		return collection_conn.find_one({'main_url':main_url})
+		return collection_conn.find({'main_url':main_url}).sort([('seq_id',-1)]).limit(1)
 
 	def getNextseqNum(self,seq_name,collection_conn):
 		next_seq_doc = collection_conn.find_one_and_update({
