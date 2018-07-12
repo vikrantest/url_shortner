@@ -23,7 +23,6 @@ class ShortnerAPI(APIView):
 
 	def post(self,request):
 		request_data = request.data
-		print(request_data,'+++++++++++++')
 		request_shurl = request_data.get('shurl_url','')
 		if self.requestmandateValidation(request_data):
 			validated_data = self.requestUrlValidate(request_shurl)

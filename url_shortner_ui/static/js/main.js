@@ -36,27 +36,35 @@ $(document).ready(
 		}
 
 		function processSHurlRequest(){
-			this.url = 'http://localhost:8000/myshurl/generate-shurl/';
+			this.url = 'http://localhost:8080/generate-shurl';
 			let request_data = handleShurlRequestData('#main_url');
-			console.log(request_data);
 			if(request_data){
 				if(!validateUrl(request_data.shurl_url)){
 					displayError('#shurl_result_error',message_handler['Invalid Url'],'input_box_error','#main_url')
 				}
 				else{
-					getShurl(request_data,'POST');
+					getShurl(request_data,'POST',this.url);
 				}
 			}
 		}
 
-		function getShurl(param,method){
+		function getShurl(param,method,url){
+			const req_body = JSON.stringify(param);
 			$.ajax({
-				url:'http://localhost:8000/myshurl/generate-shurl/',
+				url:url,
 				method:method,
-				data: param,
+				data: req_body,
+  				dataType:'json',
+  				contentType: "application/json",
+				processData: false,
 				success: function(result){
-					const shurl = `${prefixUrl}/${result.shurl_slug}`
-					$('#shurl_result').text(shurl);
+					if(result.error){
+						displayError('#shurl_result_error',message_handler[result.error])
+					}
+					else{
+						const shurl = result.shurl_url;
+						$('#shurl_result').text(shurl);
+					}
 				},
 				error: function(error){
 					const error_message= error.responseJSON.error;
@@ -68,7 +76,6 @@ $(document).ready(
 
 		function validateUrl(url){
 			const reg = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/
-			console.log(url);
 			return reg.test(url);
 		}
 
