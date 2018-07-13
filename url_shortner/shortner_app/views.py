@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.views import APIView
@@ -6,6 +7,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from shortner_utils.validators import URLValidator
 from shortner_app.shortnerservice import urlShortnerDBService
+from shortner_app.tasks import temp
+
+logger = logging.getLogger(__name__)
+
 
 class ShortnerAPI(APIView):
 	"""
@@ -59,4 +64,5 @@ class ShortUrlConsumer(APIView):
 		shortner_service = urlShortnerDBService()
 		redirect_url = shortner_service(shurl_slug)
 		print(redirect_url)
+		logger.error(redirect_url)
 		return HttpResponseRedirect(redirect_url)

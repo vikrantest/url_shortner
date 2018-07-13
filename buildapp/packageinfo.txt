@@ -1,0 +1,14 @@
+brew install rabbitmq
+sudo /usr/local/sbin/rabbitmq-server -detached
+sudo /usr/local/sbin/rabbitmqctl add_user shurl shurlwordpass
+sudo /usr/local/sbin/rabbitmqctl add_vhost shurlhost
+sudo /usr/local/sbin/rabbitmqctl set_permissions -p shurlhost shurl ".*" ".*" ".*"
+
+python manage.py celeryd --verbosity=2 --loglevel=DEBUG
+python manage.py celerybeat --verbosity=2 --loglevel=DEBUG
+
+
+
+sudo apt-get install supervisor
+
+sudo vi /etc/supervisor/conf.d/mail_celery.conf

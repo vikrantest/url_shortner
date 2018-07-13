@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'shortner_app',
     'shortner_utils',
     'corsheaders',
+    'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,47 @@ BASE_CONVERSION_VAL = 62
 STATIC_URL = '/static/'
 
 from url_shortner.constants import *
+
+import djcelery
+djcelery.setup_loader()
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'shurl_logging': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/Users/vikrant/vikrant/workspace/vikrant/url_shortner/url_shortner/logs/shurl.log',
+        },
+        'request_file_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/Users/vikrant/vikrant/workspace/vikrant/url_shortner/url_shortner/logs/shurl_request.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['request_file_handler'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'shortner_app': {
+            'handlers': ['shurl_logging'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+
+    },
+}
