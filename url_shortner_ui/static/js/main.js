@@ -68,7 +68,7 @@ $(document).ready(
 				},
 				error: function(error){
 					const error_message= error.responseJSON.error;
-					displayError('#shurl_result_error',message_handler[error_message])
+					displayError('#shurl_result_error',message_handler[error_message]);
 				}
 
 			})

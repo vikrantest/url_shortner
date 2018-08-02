@@ -150,12 +150,12 @@ LOGGING = {
         'shurl_logging': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/Users/vikrant/vikrant/workspace/vikrant/url_shortner/url_shortner/logs/shurl.log',
+            'filename': '/tmp/logs/shurl/shurl.log',
         },
         'request_file_handler': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/Users/vikrant/vikrant/workspace/vikrant/url_shortner/url_shortner/logs/shurl_request.log',
+            'filename': '/tmp/logs/shurl/shurl_request.log',
             'formatter': 'verbose',
         },
     },
