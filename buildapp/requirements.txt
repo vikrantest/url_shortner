@@ -22,3 +22,4 @@ django-cors-headers
 celery
 django-celery
 flower
+pymongo

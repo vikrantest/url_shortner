@@ -3,7 +3,7 @@
 
 data_build_file='/buildapp/data_build.py'
 project_manage_file='/manage.py'
-db_file='/db.sqlite3'
+db_file=''
 
 cd ..
 root_directory=$(pwd)

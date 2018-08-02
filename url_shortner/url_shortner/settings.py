@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'shortner_app',
     'shortner_utils',
     'corsheaders',
-    'djcelery',
+    # 'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -130,8 +130,8 @@ STATIC_URL = '/static/'
 
 from url_shortner.constants import *
 
-import djcelery
-djcelery.setup_loader()
+# import djcelery
+# djcelery.setup_loader()
 
 
 LOGGING = {
